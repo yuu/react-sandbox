@@ -1,4 +1,6 @@
-export const option = {
+import type { EChartsOption } from "echarts";
+
+export const option: EChartsOption = {
   xAxis: {
     type: "category",
     data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],

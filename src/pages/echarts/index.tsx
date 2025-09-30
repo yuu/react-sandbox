@@ -41,6 +41,16 @@ export const EchartsPage = () => {
                 {...options.multipleXAxis}
             />
 
+            <h2>scatter matrix</h2>
+            <EChart
+                onClick={console.log}
+                style={{
+                    height: "600px",
+                    width: "100%",
+                }}
+                {...options.scatterMatrix}
+            />
+
             <div style={{ height: "50vh" }}></div>
         </div>
     );

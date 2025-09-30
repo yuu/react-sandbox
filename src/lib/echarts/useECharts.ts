@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { EChartsOption, SetOptionOpts } from "echarts";
 import type { init, ECharts, use as echartsUse } from "echarts/core";
+
 import { setupECharts } from "./utils/chart-init";
 import { buildChartOptions, getSetOptionConfig } from "./utils/chart-options";
 import { setupEventHandlers } from "./utils/event-handlers";

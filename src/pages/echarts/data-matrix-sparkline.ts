@@ -1,4 +1,5 @@
 import * as echarts from "echarts";
+import type { EChartsOption } from "echarts";
 
 const _matrixDimensionData = {
   x: ["Mon", "Tue", "Wed", "Thu", "Fri"],
@@ -13,7 +14,7 @@ const _matrixDimensionData = {
 };
 const _yBreakTimeIndex = 2; // '12:00 - 14:00',
 const _seriesFakeDataLength = 365;
-export const option = {
+export const option: EChartsOption = {
   matrix: {
     x: {
       data: _matrixDimensionData.x,

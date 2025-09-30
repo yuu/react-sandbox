@@ -1,5 +1,7 @@
+import type { EChartsOption } from "echarts";
+
 const colors = ["#5470C6", "#EE6666"];
-export const option = {
+export const option: EChartsOption = {
   color: colors,
   tooltip: {
     trigger: "none",

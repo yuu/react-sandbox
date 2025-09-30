@@ -1,6 +1,5 @@
 import type { ECharts } from "echarts/core";
 import type { EChartsEvent, EChartsEventProp } from "../events";
-import type { UseEChartsOptions } from "../useECharts";
 
 // Map event names to their prop names
 const eventMap: Record<EChartsEvent, EChartsEventProp> = {
@@ -49,7 +48,7 @@ function clearEventListeners(instance: ECharts) {
 // Setup new event listeners based on provided options
 export function setupEventHandlers(
 	instance: ECharts,
-	options: UseEChartsOptions,
+	options: EChartsEventProp,
 ) {
 	// Clear existing listeners to prevent duplicates
 	clearEventListeners(instance);
