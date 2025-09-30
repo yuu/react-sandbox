@@ -27,16 +27,13 @@ export function useECharts<T extends HTMLElement>(
 
     const setContainerRef = async (node: T) => {
         if (!node) {
-            console.warn("container node undefined");
             echartsRef.current = null;
             return;
         }
         if (echartsRef.current) {
-            console.warn("echarts instance already initialized");
             return;
         }
 
-        console.log("initialize");
         containerRef.current = node;
 
         const resizeObserver = new ResizeObserver(() => {
