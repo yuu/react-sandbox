@@ -22,13 +22,6 @@ export type EChartProps = UseEChartsOptions &
  * />
  * ```
  */
-
-//lazyUpdate,
-// notMerge,
-//replaceMerge,
-//silent,
-//transition,
-
 export const EChart = ({
 	// Initialization options
 	opts,
