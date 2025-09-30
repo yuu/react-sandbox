@@ -8,6 +8,7 @@ import { Ramda } from "./pages/ramda";
 import { OptionT } from "./pages/option-t";
 import { GoldenLayoutPage } from "./pages/golden-layout";
 import { ReactGridLayoutPage } from "./pages/react-grid-layout";
+import { EchartsPage } from "./pages/echarts";
 import "./App.css";
 
 const Links = () => (
@@ -39,6 +40,9 @@ const Links = () => (
     <li>
       <Link to="/react-grid-layout">react-grid-layout</Link>
     </li>
+    <li>
+      <Link to="/echarts">apatch echarts</Link>
+    </li>
   </ul>
 );
 
@@ -55,6 +59,7 @@ export default function App() {
       <Route path="/option-t" element={<OptionT />} />
       <Route path="/golden-layout" element={<GoldenLayoutPage />} />
       <Route path="/react-grid-layout" element={<ReactGridLayoutPage />} />
+      <Route path="/echarts" element={<EchartsPage />} />
     </Routes>
   );
 }

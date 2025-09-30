@@ -25,6 +25,7 @@
     "@types/ramda": "^0.31.0",
     "@types/react-grid-layout": "^1.3.5",
     "clsx": "^2.1.1",
+    "echarts": "^6.0.0",
     "fp-ts": "^2.16.10",
     "golden-layout": "^2.6.0",
     "html-react-parser": "^5.2.5",
