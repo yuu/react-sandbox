@@ -1,19 +1,52 @@
 run = "npm run dev"
 modules = ["nodejs-20"]
-hidden = [".config", "tsconfig.json", "tsconfig.node.json", "vite.config.js", ".gitignore"]
+hidden = [
+    ".config",
+    "tsconfig.json",
+    "tsconfig.node.json",
+    "vite.config.js",
+    ".gitignore",
+]
 entrypoint = "src/App.tsx"
 
 [nix]
 channel = "stable-24_05"
+packages = ["emacs28-gtk2"]
 
 [unitTest]
 language = "nodejs"
 
-[deployment]
-deploymentTarget = "static"
-build = ["npm", "run", "build"]
-publicDir = "dist"
+[[ports]]
+localPort = 5000
+externalPort = 80
 
 [[ports]]
-localPort = 5173
-externalPort = 80
+localPort = 5001
+externalPort = 3000
+
+[agent]
+expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Server"
+
+[[workflows.workflow]]
+name = "Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
