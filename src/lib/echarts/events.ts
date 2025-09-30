@@ -107,7 +107,3 @@ export const echartsEvents: Record<EChartsEventProp, EChartsEvent> = {
 	onRendered: "rendered",
 	onFinished: "finished",
 } as const;
-
-export const echartsEventsMap = Object.fromEntries(
-	Object.entries(echartsEvents).map(([key, value]) => [value, key]),
-) as Record<EChartsEvent, EChartsEventProp>;
