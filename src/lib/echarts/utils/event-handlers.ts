@@ -1,11 +1,11 @@
 import type { ECharts } from "echarts/core";
 import { echartsEvents } from "../events";
-import type { EChartsEvent, EChartsEventProp } from "../events";
-import type { UseEChartsOptions } from "../useECharts";
+import type { EChartsEvent, EChartEventsProps } from "../events";
+// import type { UseEChartsOptions } from "../useECharts";
 
 // Clear all existing event listeners
 function clearEventListeners(instance: ECharts) {
-	for (const eventName of Object.keys(echartsEventsMap)) {
+	for (const [_, eventName] of Object.entries(echartsEvents)) {
 		instance.off(eventName);
 	}
 }
@@ -13,7 +13,7 @@ function clearEventListeners(instance: ECharts) {
 // Setup new event listeners based on provided options
 export function setupEventHandlers(
 	instance: ECharts,
-	options: UseEChartsOptions,
+	options: EChartEventsProps,
 ) {
 	// Clear existing listeners to prevent duplicates
 	clearEventListeners(instance);
