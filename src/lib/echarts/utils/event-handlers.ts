@@ -1,62 +1,26 @@
 import type { ECharts } from "echarts/core";
-import type { EChartsEvent, EChartsEventProp } from "../events";
-
-// Map event names to their prop names
-const eventMap: Record<EChartsEvent, EChartsEventProp> = {
-	axisareaselected: "onAxisAreaSelected",
-	brush: "onBrush",
-	brushend: "onBrushEnd",
-	brushselected: "onBrushSelected",
-	click: "onClick",
-	contextmenu: "onContextMenu",
-	datarangeselected: "onDataRangeSelected",
-	dataviewchanged: "onDataViewChanged",
-	datazoom: "onDataZoom",
-	dblclick: "onDoubleClick",
-	downplay: "onDownplay",
-	finished: "onFinished",
-	geoselectchanged: "onGeoSelectChanged",
-	geoselected: "onGeoSelected",
-	geounselected: "onGeoUnselected",
-	globalcursortaken: "onGlobalCursorTaken",
-	globalout: "onGlobalOut",
-	highlight: "onHighlight",
-	legendinverseselect: "onLegendInverseSelect",
-	legendscroll: "onLegendScroll",
-	legendselectchanged: "onLegendSelectChanged",
-	legendselected: "onLegendSelected",
-	legendunselected: "onLegendUnselected",
-	magictypechanged: "onMagicTypeChanged",
-	mousedown: "onMouseDown",
-	mousemove: "onMouseMove",
-	mouseout: "onMouseOut",
-	mouseover: "onMouseOver",
-	rendered: "onRendered",
-	restore: "onRestore",
-	selectchanged: "onSelectChanged",
-	timelinechanged: "onTimelineChanged",
-	timelineplaychanged: "onTimelinePlayChanged",
-} as const;
+import { echartsEvents } from "../events";
+import type { EChartsEvent, EChartsEventProp, EChartEventsProps } from "../events";
 
 // Clear all existing event listeners
 function clearEventListeners(instance: ECharts) {
-	for (const eventName of Object.keys(eventMap)) {
-		instance.off(eventName);
-	}
+        for (const eventName of Object.keys(echartsEvents)) {
+                instance.off(eventName);
+        }
 }
 
 // Setup new event listeners based on provided options
 export function setupEventHandlers(
-	instance: ECharts,
-	options: EChartsEventProp,
+        instance: ECharts,
+        options: EChartEventsProps,
 ) {
-	// Clear existing listeners to prevent duplicates
-	clearEventListeners(instance);
+        // Clear existing listeners to prevent duplicates
+        clearEventListeners(instance);
 
-	for (const [eventName, propName] of Object.entries(eventMap)) {
-		const handler = options[propName];
-		if (typeof handler === "function") {
-			instance.on(eventName as EChartsEvent, handler);
-		}
-	}
+        for (const [propName, eventName] of Object.entries(echartsEvents)) {
+                const handler = options[propName as EChartsEventProp];
+                if (typeof handler === "function") {
+                        instance.on(eventName as EChartsEvent, handler);
+                }
+        }
 }
