@@ -18,9 +18,13 @@ export interface GridPos {
 }
 
 type GridItemProps = { children: React.ReactNode };
-const GridItem = forwardRef<HTMLDivElement, GridItemProps>(({ children, ...rest }, ref) => (
-    <div ref={ref} {...rest}>{children}</div>
-));
+const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
+    ({ children, ...rest }, ref) => (
+        <div ref={ref} {...rest}>
+            {children}
+        </div>
+    ),
+);
 
 type PanelProps = { panel: Layout };
 const Panel = ({ panel }: PanelProps) => {
@@ -105,13 +109,10 @@ const useGridLayout = () => {
         },
         [updateGridPosInner],
     );
-    const onLayoutChange: LayoutChangeCallback = useCallback(() => {
+    const onLayoutChange: LayoutChangeCallback = useCallback((layout) => {
         /*
         if (this.state.panelFilter) {
         return;
-        }
-        for (const newPos of newLayout) {
-        this.panelMap[newPos.i!].updateGridPos(newPos, this.isLayoutInitialized);
         }
         
         if (this.isLayoutInitialized) {
@@ -121,6 +122,13 @@ const useGridLayout = () => {
         this.props.dashboard.sortPanelsByGridPos();
         this.forceUpdate();
         */
+
+        for (const newPos of newLayout) {
+            this.panelMap[newPos.i!].updateGridPos(
+                newPos,
+                this.isLayoutInitialized,
+            );
+        }
     }, []);
 
     return {
