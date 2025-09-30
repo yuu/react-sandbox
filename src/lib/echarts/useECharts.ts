@@ -27,24 +27,13 @@ export function useECharts<T extends HTMLElement>(
 
     const setContainerRef = async (node: T) => {
         if (!node) {
-            // Cleanup when node is removed
-            resizeObserverRef.current?.disconnect();
-            resizeObserverRef.current = undefined;
-            echartsRef.current?.dispose();
+            console.warn("container node undefined");
             echartsRef.current = null;
-            containerRef.current = undefined;
             return;
         }
-        
-        // Skip if already initialized with the same node
-        if (echartsRef.current && containerRef.current === node) {
-            return;
-        }
-
-        // Cleanup previous instance if exists
         if (echartsRef.current) {
-            resizeObserverRef.current?.disconnect();
-            echartsRef.current?.dispose();
+            console.warn("echarts instance already initialized");
+            return;
         }
 
         console.log("initialize");
@@ -65,13 +54,13 @@ export function useECharts<T extends HTMLElement>(
     // Cleanup effect
     useEffect(() => {
         return () => {
-            resizeObserverRef.current?.disconnect();
-            resizeObserverRef.current = undefined;
-            echartsRef.current?.dispose();
-            echartsRef.current = null;
+            echartsRef.current?.dispose?.();
+            resizeObserverRef.current?.disconnect?.();
             containerRef.current = undefined;
+            echartsRef.current = null;
+            resizeObserverRef.current = undefined;
         };
-    }, []);
+    }, [echartsRef]);
 
     // Change group effect
     useEffect(() => {
