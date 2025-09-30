@@ -1,12 +1,12 @@
 import type { HTMLAttributes } from "react";
-import type { EChartsEventProp } from "./events";
+import type { EChartsEventHandlerName } from "./utils/event-handlers";
 import type { UseEChartsOptions } from "./useECharts";
 import { useECharts } from "./useECharts";
 
 export type EChartProps = UseEChartsOptions &
 	Omit<
 		HTMLAttributes<HTMLDivElement>,
-		keyof UseEChartsOptions | EChartsEventProp
+		keyof UseEChartsOptions | EChartsEventHandlerName
 	>;
 
 /**
@@ -22,28 +22,24 @@ export type EChartProps = UseEChartsOptions &
  * />
  * ```
  */
+
+//lazyUpdate,
+// notMerge,
+//replaceMerge,
+//silent,
+//transition,
+
 export const EChart = ({
 	// Initialization options
-	devicePixelRatio,
-	height,
-	locale,
-	pointerSize,
-	renderer,
-	theme,
-	use,
-	useCoarsePointer,
-	useDirtyRect,
-	width,
+	opts,
 
 	// ECharts instance options
 	group,
 
 	// SetOption options
-	lazyUpdate,
-	notMerge,
-	replaceMerge,
-	silent,
-	transition,
+	setOption,
+
+	// ?
 	darkMode,
 	media,
 	options,
@@ -132,26 +128,15 @@ export const EChart = ({
 	// Use ECharts hook
 	const [ref] = useECharts<HTMLDivElement>({
 		// Initialization options
-		devicePixelRatio,
-		height,
-		locale,
-		pointerSize,
-		renderer,
-		theme,
-		use,
-		useCoarsePointer,
-		useDirtyRect,
-		width,
+		opts,
 
 		// ECharts instance options
 		group,
 
 		// SetOption options
-		lazyUpdate,
-		notMerge,
-		replaceMerge,
-		silent,
-		transition,
+		setOption,
+
+		// options
 		darkMode,
 		media,
 		options,
@@ -236,6 +221,5 @@ export const EChart = ({
 		onTimelinePlayChanged,
 	});
 
-	// Render the component
 	return <div {...rest} ref={ref} />;
 };

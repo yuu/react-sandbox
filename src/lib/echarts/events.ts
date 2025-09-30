@@ -33,7 +33,7 @@ export type EChartsEvent =
 	| "timelinechanged"
 	| "timelineplaychanged";
 
-export type EChartsEventProp =
+export type EChartsEventHandlerName =
 	| "onAxisAreaSelected"
 	| "onBrush"
 	| "onBrushEnd"
@@ -69,10 +69,10 @@ export type EChartsEventProp =
 	| "onTimelinePlayChanged";
 
 export type EChartEventsProps = {
-	[K in EChartsEventProp]?: () => any;
+	[K in EChartsEventHandlerName]?: () => any;
 };
 
-export const echartsEvents: Record<EChartsEventProp, EChartsEvent> = {
+export const echartsEvents: Record<EChartsEventHandlerName, EChartsEvent> = {
 	onClick: "click",
 	onDoubleClick: "dblclick",
 	onMouseDown: "mousedown",

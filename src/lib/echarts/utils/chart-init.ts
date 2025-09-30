@@ -1,5 +1,17 @@
-import { init, use as echartsUse, type ECharts } from "echarts/core";
-import type { UseEChartsOptions } from "../useECharts";
+import {
+	init,
+	use as echartsUse,
+	type ECharts,
+	type EChartsInitOpts,
+} from "echarts/core";
+
+export type EChartsInitializeOpts = EChartsInitOpts & {
+	theme?: Parameters<typeof init>[1];
+};
+
+export type EChartsInitializeOptsWithUse = EChartsInitializeOpts & {
+	use?: Parameters<typeof echartsUse>[0];
+};
 
 export async function getGlobalUse() {
 	const modules = [
@@ -18,35 +30,16 @@ export async function getGlobalUse() {
 
 export function initializeECharts<T extends HTMLElement>(
 	container: T,
-	options: UseEChartsOptions,
+	options: EChartsInitializeOpts,
 ) {
-	const {
-		theme,
-		devicePixelRatio,
-		height,
-		locale,
-		pointerSize,
-		renderer,
-		useCoarsePointer,
-		useDirtyRect,
-		width,
-	} = options;
+	const { theme, ...opts } = options;
 
-	return init(container, theme, {
-		devicePixelRatio,
-		height,
-		locale,
-		pointerSize,
-		renderer,
-		useCoarsePointer,
-		useDirtyRect,
-		width,
-	});
+	return init(container, theme, opts);
 }
 
 export async function setupECharts<T extends HTMLElement>(
 	container: T,
-	options: UseEChartsOptions,
+	options: EChartsInitializeOptsWithUse,
 ): Promise<ECharts | undefined> {
 	if (!container) return;
 

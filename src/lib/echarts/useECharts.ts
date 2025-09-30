@@ -1,79 +1,98 @@
 import { useEffect, useRef, useState } from "react";
 import type { EChartsOption, SetOptionOpts } from "echarts";
-import type { init, ECharts, use as echartsUse } from "echarts/core";
+import type { ECharts } from "echarts/core";
+import {
+    setupECharts,
+    type EChartsInitializeOptsWithUse,
+} from "./utils/chart-init";
+import { buildChartOptions } from "./utils/chart-options";
+import {
+    setupEventHandlers,
+    type EChartEventsProps,
+} from "./utils/event-handlers";
 
-import { setupECharts } from "./utils/chart-init";
-import { buildChartOptions, getSetOptionConfig } from "./utils/chart-options";
-import { setupEventHandlers } from "./utils/event-handlers";
-import { type EChartEventsProps } from "./events";
-
-export type UseEChartsOptions = EChartEventsProps &
-    SetOptionOpts &
-    EChartsOption &
-    Parameters<typeof init>[2] & {
+export type UseEChartsOptions = EChartsOption &
+    EChartEventsProps & {
+        opts?: EChartsInitializeOptsWithUse;
+        setOption?: SetOptionOpts;
         group?: ECharts["group"];
-        theme?: Parameters<typeof init>[1];
-        use?: Parameters<typeof echartsUse>[0];
     };
 
 export function useECharts<T extends HTMLElement>(
     options: UseEChartsOptions,
-): [(node: T) => void, ECharts | undefined] {
+): [(node: T) => void, ECharts | null] {
     const containerRef = useRef<T>();
-    const echartsRef = useRef<ECharts>();
+    const echartsRef = useRef<ECharts | null>(null);
     const resizeObserverRef = useRef<ResizeObserver>();
-    const [started, setStarted] = useState(false);
 
     const setContainerRef = async (node: T) => {
-        if (!node || node === containerRef.current) {
+        if (!node) {
+            // Cleanup when node is removed
+            resizeObserverRef.current?.disconnect();
+            resizeObserverRef.current = undefined;
+            echartsRef.current?.dispose();
+            echartsRef.current = null;
+            containerRef.current = undefined;
             return;
         }
-        if (echartsRef.current) {
-            // echartsRef.current.dispose();
+        
+        // Skip if already initialized with the same node
+        if (echartsRef.current && containerRef.current === node) {
+            return;
         }
 
+        // Cleanup previous instance if exists
+        if (echartsRef.current) {
+            resizeObserverRef.current?.disconnect();
+            echartsRef.current?.dispose();
+        }
+
+        console.log("initialize");
         containerRef.current = node;
-        echartsRef.current = await setupECharts(node, options);
-        resizeObserverRef.current = startResizeObserver();
 
-        setStarted(true);
-    };
-
-    const startResizeObserver = () => {
         const resizeObserver = new ResizeObserver(() => {
             echartsRef.current?.resize();
         });
-        if (containerRef.current) {
-            resizeObserver.observe(containerRef.current);
-        }
-        return resizeObserver;
+        resizeObserverRef.current = resizeObserver;
+        resizeObserver.observe(node);
+
+        echartsRef.current =
+            (await setupECharts(node, options.opts ?? {})) ?? null;
+        const chartOptions = buildChartOptions(options);
+        echartsRef.current?.setOption(chartOptions, options.setOption);
     };
 
     // Cleanup effect
     useEffect(() => {
-        // return () => echartsRef.current?.dispose?.();
-    }, [echartsRef]);
+        return () => {
+            resizeObserverRef.current?.disconnect();
+            resizeObserverRef.current = undefined;
+            echartsRef.current?.dispose();
+            echartsRef.current = null;
+            containerRef.current = undefined;
+        };
+    }, []);
 
+    // Change group effect
     useEffect(() => {
-        if (!echartsRef.current || !started) {
+        if (!echartsRef.current) {
             return;
         }
         if (options.group) {
             echartsRef.current.group = options.group;
         }
-    }, [options.group, started, echartsRef.current]);
+    }, [options.group, echartsRef.current]);
 
     // Chart options effect
     useEffect(() => {
-        if (!echartsRef.current || !started) {
+        if (!echartsRef.current) {
             return;
         }
 
         const chartOptions = buildChartOptions(options);
-        const setOptionConfig = getSetOptionConfig(options);
-
-        echartsRef.current.setOption(chartOptions, setOptionConfig);
+        echartsRef.current.setOption(chartOptions, options.setOption);
     }, [
+        echartsRef.current,
         options.angleAxis,
         options.animation,
         options.animationDelay,
@@ -119,28 +138,17 @@ export function useECharts<T extends HTMLElement>(
         options.visualMap,
         options.xAxis,
         options.yAxis,
-
-        //
-        options.lazyUpdate,
-        options.notMerge,
-        options.replaceMerge,
-        options.silent,
-        options.transition,
-
-        //
-        started,
-        echartsRef.current,
+        options.setOption,
     ]);
 
     // Event handlers effect
     useEffect(() => {
-        if (!echartsRef.current || !started) {
+        if (!echartsRef.current) {
             return;
         }
 
         setupEventHandlers(echartsRef.current, options);
     }, [
-        started,
         echartsRef.current,
         options.onAxisAreaSelected,
         options.onBrush,
